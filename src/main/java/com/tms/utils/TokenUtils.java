@@ -34,7 +34,7 @@ public class TokenUtils {
             //携带username，password信息，生成签名
             token = JWT.create()
                     .withHeader(header)
-                    .withClaim("username",username)
+                    .withClaim("account",username)
                     .withClaim("password",password).withExpiresAt(date)
                     .sign(algorithm);
 
@@ -66,8 +66,8 @@ public class TokenUtils {
         String password = "123";
         String token = token(username,password);
         System.out.println(token);
-        boolean b = verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMyIsImV4cCI6MTY1NzA5ODE4MCwidXNlcm5hbWUiOiJ6aGFuZ3NhbiJ9.W-IgXJmNBrboXlzT_PtPkTavYhgRn9ZwkVpJoJLU6ks");
-        Claim username1 = JWT.decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMyIsImV4cCI6MTY1NzA5ODE4MCwidXNlcm5hbWUiOiJ6aGFuZ3NhbiJ9.W-IgXJmNBrboXlzT_PtPkTavYhgRn9ZwkVpJoJLU6k1").getClaim("username");
+        boolean b = verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMyIsImV4cCI6MTY4Mjc3MjAwNSwiYWNjb3VudCI6InpoYW5nc2FuIn0.f2TjxRvv3nqnEKLSUEZUpWNYKbA94rFxZcLA0NH5yzQ");
+        Claim username1 = JWT.decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMyIsImV4cCI6MTY4Mjc3MjAwNSwiYWNjb3VudCI6InpoYW5nc2FuIn0.f2TjxRvv3nqnEKLSUEZUpWNYKbA94rFxZcLA0NH5yzQ").getClaim("account");
         System.out.println("我是从token中获取的信息"+username1.asString());
 
         System.out.println(b);
