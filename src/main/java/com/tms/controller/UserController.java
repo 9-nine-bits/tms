@@ -41,7 +41,7 @@ public class UserController {
     public Result<LoginResponseDto> login(@RequestBody LoginRequestDto request){
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         System.out.println("我到这了");
-        wrapper.eq("accout", request.getAccount());
+        wrapper.eq("account", request.getAccount());
         System.out.println(request.getAccount());
         User u=userService.getOne(wrapper);
         LoginResponseDto responseDto=new LoginResponseDto();
