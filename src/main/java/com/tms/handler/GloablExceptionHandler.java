@@ -15,7 +15,7 @@ public class GloablExceptionHandler {
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("message", msg);
-        jsonObject.put("status",500);
+        jsonObject.put("code",500);
         return jsonObject;
     }
 }

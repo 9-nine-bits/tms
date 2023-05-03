@@ -20,7 +20,7 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    @Select("select account,username,")
-    IPage<StudentPageDto> selectByPage(IPage<User> userPage , @Param(Constants.WRAPPER) Wrapper<User> userWrapper);
+    @Select("select account, username,phone,gender from  role left join (`user` u left join role_user ru on u.id=ru.user_id)  on role.id=ru.role_id where role_name='学生'")
+    IPage<StudentPageDto> selectByPage(IPage<User> userPage);
 
 }

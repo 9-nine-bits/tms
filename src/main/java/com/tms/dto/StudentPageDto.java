@@ -7,6 +7,6 @@ public class StudentPageDto {
     private int account;
     private String username;
     private String phone;
-    private String male;
+    private String gender;
 
 }

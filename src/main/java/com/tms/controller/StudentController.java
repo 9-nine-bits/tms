@@ -39,16 +39,16 @@ public class StudentController {
     UserMapper userMapper;
 
     @PostMapping("/all")
-    public Result<List<User>> getAllStudent(PageRequestDto pageRequestDto){
-        QueryWrapper<User> queryWrapper=new QueryWrapper<>();
-        LambdaQueryWrapper<User> userLambdaQueryWrapper = Wrappers.lambdaQuery();
-        userLambdaQueryWrapper.like(User::getUsername,"wuchuang");
+    public Result<List<StudentPageDto>> getAllStudent(PageRequestDto pageRequestDto){
+       // QueryWrapper<User> queryWrapper=new QueryWrapper<>();
+        //LambdaQueryWrapper<User> userLambdaQueryWrapper = Wrappers.lambdaQuery();
+       // userLambdaQueryWrapper.like(User::getUsername,"wuchuang");
         Page<User> page=new Page<>(pageRequestDto.getPageNum(),pageRequestDto.getPageSize(),false);
-        User u=userService.getOne(userLambdaQueryWrapper);
-        System.out.println(u.getUsername()+u.getPassword());
-        IPage<User> iPage=userMapper.selectPage(page,userLambdaQueryWrapper);
-        System.out.println(iPage.getRecords().get(0));
-        return Result.success(page.getRecords());
+       // User u=userService.getOne(userLambdaQueryWrapper);
+       // System.out.println(u.getUsername()+u.getPassword());
+        IPage<StudentPageDto> iPage=userMapper.selectByPage(page);
+       // System.out.println(iPage.getRecords().get(0));
+        return Result.success(iPage.getRecords());
     }
 // 组装查询条件
 
