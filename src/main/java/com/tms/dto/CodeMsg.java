@@ -30,5 +30,6 @@ public class CodeMsg {
     public static final CodeMsg MOBILE_EMPTY = new CodeMsg(500211, "手机号不能为空");
     public static final CodeMsg MOBILE_ERROR = new CodeMsg(500211, "手机号格式错误");
     public static final CodeMsg USER_NOT_EXITS = new CodeMsg(500211, "用户不存在");
+
     public static final CodeMsg PASSWORD_ERROR = new CodeMsg(500211, "密码错误");
 }

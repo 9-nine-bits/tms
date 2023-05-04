@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.tms.dto.PageRequestDto;
 import com.tms.dto.Result;
+import com.tms.dto.StudentDelRequestDto;
 import com.tms.dto.StudentPageDto;
 import com.tms.entity.Role;
 import com.tms.entity.User;
@@ -39,7 +40,7 @@ public class StudentController {
     UserMapper userMapper;
 
     @PostMapping("/all")
-    public Result<List<StudentPageDto>> getAllStudent(PageRequestDto pageRequestDto){
+    public Result<List<StudentPageDto>> getAllStudent(@RequestBody PageRequestDto pageRequestDto){
        // QueryWrapper<User> queryWrapper=new QueryWrapper<>();
         //LambdaQueryWrapper<User> userLambdaQueryWrapper = Wrappers.lambdaQuery();
        // userLambdaQueryWrapper.like(User::getUsername,"wuchuang");
@@ -50,6 +51,18 @@ public class StudentController {
        // System.out.println(iPage.getRecords().get(0));
         return Result.success(iPage.getRecords());
     }
-// 组装查询条件
+
+
+
+    @PostMapping("/delete")
+    public Result<String> delete(@RequestBody StudentDelRequestDto requestDto){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("account",requestDto.getAccount());
+        userMapper.delete(wrapper);
+        System.out.println(requestDto.getAccount());
+        System.out.println("我到删除学生这了");
+        return Result.success("success");
+
+    }
 
 }
