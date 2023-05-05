@@ -8,7 +8,14 @@ public class Result<T> {
     private String msg;//返回的message
     private T data;//返回的数据
 
+    private long total=1L;
+
     private Result(T data) {
+        this.code = 0;
+        this.msg = "success";
+        this.data = data;
+    }
+    private Result(T data,long total) {
         this.code = 0;
         this.msg = "success";
         this.data = data;
@@ -34,5 +41,9 @@ public class Result<T> {
      */
     public static <T> Result<T> success(T data) {
         return new Result<T>(data);
+    }
+
+    public static <T> Result<T> success(T data,long total) {
+        return new Result<T>(data,total);
     }
 }

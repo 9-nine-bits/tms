@@ -32,4 +32,9 @@ public class CodeMsg {
     public static final CodeMsg USER_NOT_EXITS = new CodeMsg(500211, "用户不存在");
 
     public static final CodeMsg PASSWORD_ERROR = new CodeMsg(500211, "密码错误");
+
+    public static final CodeMsg SELETED_ERROR = new CodeMsg(500212, "该选题已经有小组选了");
+    public static final CodeMsg NUMBER_ERROR = new CodeMsg(500213, "当前选题人数大于最大数量");
+    public static final CodeMsg TOPIC_NOT_EXITS = new CodeMsg(500214, "选题不存在");
+
 }

@@ -49,7 +49,7 @@ public class StudentController {
        // System.out.println(u.getUsername()+u.getPassword());
         IPage<StudentPageDto> iPage=userMapper.selectByPage(page);
        // System.out.println(iPage.getRecords().get(0));
-        return Result.success(iPage.getRecords());
+        return Result.success(iPage.getRecords(), iPage.getTotal());
     }
 
 
