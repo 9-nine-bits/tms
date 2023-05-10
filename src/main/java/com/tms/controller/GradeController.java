@@ -1,12 +1,13 @@
 package com.tms.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tms.dto.GradeResponseDto;
-import com.tms.dto.PageRequestDto;
-import com.tms.dto.Result;
+import com.tms.dto.*;
 import com.tms.entity.Grade;
+import com.tms.entity.RoleUser;
+import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
 import com.tms.mapper.GradeMapper;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +40,14 @@ public class GradeController {
         IPage<GradeResponseDto> iPage=gradeMapper.selectByPage(page);
         return Result.success(iPage.getRecords(),iPage.getTotal());
     }
+    //计算总分数
+    @PassToken
+    @PostMapping("/cal")
+    public Result<String> cal(){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+       return null;
 
+    }
 
 
 

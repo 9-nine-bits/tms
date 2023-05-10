@@ -24,4 +24,7 @@ public interface TopicMapper extends BaseMapper<Topic> {
     @Select("select topic_name, topic_desc,topic_capacity,topic_max_num,topic_selected_num,is_top,is_check,create_user_id from  topic  where is_delete!=1")
     IPage<TopicAllResponseDto> selectByPage(IPage<Topic> topicPage);
 
+    @Select("select id from topic where topic_name = #{topicName} and topic.is_delete!=1" )
+    Integer getId(String topicName);
+
 }

@@ -2,8 +2,12 @@ package com.tms.interceptor;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
 import com.tms.inter_face.UserLoginToken;
+import com.tms.mapper.UserMapper;
+import com.tms.utils.ThreadLocalUtil;
 import com.tms.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -14,6 +18,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -25,6 +30,8 @@ public class RequestInterceptor implements HandlerInterceptor {
 
 
     private Logger logger = LoggerFactory.getLogger(RequestInterceptor.class);
+    @Resource
+    UserMapper userMapper;
 
 
 
@@ -81,6 +88,10 @@ public class RequestInterceptor implements HandlerInterceptor {
                 String account;
                 try {
                     account = JWT.decode(token).getClaim("account").asString();
+                    QueryWrapper<User> wrapper=new QueryWrapper();
+                    wrapper.eq("account",account);
+                    User u=userMapper.selectOne(wrapper);
+                    ThreadLocalUtil.addCurrentUser(u);
                 } catch (JWTDecodeException j) {
                     throw new RuntimeException("token不正确，请不要通过非法手段创建token");
                 }
@@ -103,6 +114,7 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        ThreadLocalUtil.remove();
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }

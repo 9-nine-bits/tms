@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IStageScoreService extends IService<StageScore> {
 
+    public double cal(String account);
+
+
+
+
+
 }

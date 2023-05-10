@@ -76,7 +76,7 @@ public class TopicController {
             t.setTopicDesc(requestDto.getTopicDesc());
             t.setTopicCapacity(requestDto.getTopicCapacity());
             t.setTopicMaxNum(requestDto.getTopicMaxNum());
-            t.setIsTop(t.getIsTop());
+            t.setIsTop(requestDto.getIsTop());
             topicService.update(t,wrapper);
             return Result.success("success");
         }
@@ -85,5 +85,24 @@ public class TopicController {
         return Result.error(CodeMsg.TOPIC_NOT_EXITS);
 
     }
+    //更新选题内容，更改的请求所有字段不能为空
+    @PassToken
+    @PostMapping("/approval")
+    public Result<String> update(@RequestBody TopicIsCheckRequestDto requestDto){
+        QueryWrapper<Topic> wrapper = new QueryWrapper<>();
+        wrapper.eq("topic_name",requestDto.getTopicName());
+        Topic t=topicService.getOne(wrapper);
+        if(null!=t){
+
+            t.setIsCheck(requestDto.getIsCheck());
+            topicService.update(t,wrapper);
+
+            return Result.success("success");
+        }
+        return Result.error(CodeMsg.TOPIC_NOT_EXITS);
+
+    }
+
+
 
 }

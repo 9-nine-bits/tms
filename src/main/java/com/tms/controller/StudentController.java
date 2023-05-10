@@ -4,18 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
-import com.tms.dto.PageRequestDto;
-import com.tms.dto.Result;
-import com.tms.dto.StudentDelRequestDto;
-import com.tms.dto.StudentPageDto;
-import com.tms.entity.Role;
-import com.tms.entity.User;
+import com.tms.dto.*;
+import com.tms.entity.*;
 
-import com.tms.mapper.UserMapper;
+import com.tms.mapper.*;
 import com.tms.service.IRoleService;
 import com.tms.service.IUserService;
+import com.tms.utils.ThreadLocalUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,6 +36,20 @@ public class StudentController {
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    TeamMapper teamMapper;
+
+    @Resource
+    TopicMapper topicMapper;
+
+    @Resource
+    TeamLessonMapper teamLessonMapper;
+
+    @Resource
+    TeamUserMapper teamUserMapper;
+
+
 
     @PostMapping("/all")
     public Result<List<StudentPageDto>> getAllStudent(@RequestBody PageRequestDto pageRequestDto){
@@ -64,5 +76,95 @@ public class StudentController {
         return Result.success("success");
 
     }
+
+    //选题，选题的时候创建小组，同时开启学生选题阶段
+    @PostMapping("/select")
+    public Result<String> select(@RequestBody TeamCreateRequestDto requestDto){
+        QueryWrapper<Topic> wrapper = new QueryWrapper<>();
+        User u=ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+        wrapper.eq("topic_name",requestDto.getTopicName());
+        Topic topic=topicMapper.selectOne(wrapper);
+        if(topic.getTopicSelectedNum()<topic.getTopicMaxNum()) {
+            Team team = new Team();
+            team.setTeamName(requestDto.getTeamName());
+            team.setTeamCapacity(topic.getTopicCapacity());
+            team.setTeamCurCapacity("1");
+            team.setTeamLeaderId(userid);
+            team.setTeamTopicId(topicMapper.getId(topic.getTopicName()));
+            teamMapper.insert(team);
+            topic.setTopicSelectedNum(topic.getTopicSelectedNum()+1);
+            //选题数加一
+            topicMapper.update(topic,wrapper);
+            TeamLesson teamLesson=new TeamLesson();
+            int teamid=teamMapper.getId(team.getTeamName());
+            teamLesson.setStatusId(1);
+            teamLesson.setTeamId(teamid);
+            teamLessonMapper.insert(teamLesson);
+            return Result.success("success");
+        }
+        return Result.error(CodeMsg.NUMBER_ERROR);
+
+    }
+
+
+    //加入小组
+    @PostMapping("/join")
+    public Result<String> join(@RequestBody TeamJoinRequestDto requestDto){
+        User u=ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+        int teamid=teamMapper.getId(requestDto.getTeamName());
+        QueryWrapper<TeamUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",userid);
+        TeamUser t=teamUserMapper.selectOne(wrapper);
+        if(null==t){
+            t=new TeamUser();
+            t.setTeamId(teamid);
+            t.setUserId(userid);
+            teamUserMapper.insert(t);
+            return Result.success("success");
+        }
+
+        return Result.error(CodeMsg.REPEAT_TEAMINSERT);
+
+    }
+
+    //退出小组
+    @PostMapping("/quit")
+    public Result<String> quit(@RequestBody TeamJoinRequestDto requestDto){
+        User u=ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+        int teamid=teamMapper.getId(requestDto.getTeamName());
+        QueryWrapper<TeamUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",userid);
+        TeamUser t=teamUserMapper.selectOne(wrapper);
+        if(null!=t){
+            teamUserMapper.delete(wrapper);
+            return Result.success("success");
+        }
+
+        return Result.error(CodeMsg.REPEAT_TEAMINSERT);
+
+    }
+
+    //组长踢出小组人员(前端需设置组长只能踢本组的，即只有本组的成员后面有踢出按钮（后端暂时未做校验）)
+    @PostMapping("/kick")
+    public Result<String> kick(@RequestBody StudentDelRequestDto requestDto){
+
+        int userid=userMapper.getId(requestDto.getAccount());
+        QueryWrapper<TeamUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",userid);
+        TeamUser t=teamUserMapper.selectOne(wrapper);
+        if(null!=t){
+            teamUserMapper.delete(wrapper);
+            return Result.success("success");
+        }
+
+        return Result.error(CodeMsg.REPEAT_TEAMINSERT);
+
+    }
+
+
+
 
 }
