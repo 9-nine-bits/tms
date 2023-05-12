@@ -24,4 +24,13 @@ public interface TeamMapper extends BaseMapper<Team> {
 
     @Select("select team_name,u.username as team_leader,team_capacity,team_cur_capacity,topic.topic_name as topic from topic inner join(team t inner join `user` u on t.team_leader_id=u.id ) on topic.id=t.team_topic_id where t.is_delete!=1")
     IPage<TeamPageDto> selectByPage(IPage<Team> teamPage);
+
+    @Select("select team_name,u.username as team_leader,team_capacity,team_cur_capacity,topic.topic_name as topic from topic inner join(team t inner join `user` u on t.team_leader_id=u.id ) on topic.id=t.team_topic_id where t.id=#{id} and t.is_delete!=1")
+    TeamPageDto selectTeam(Integer id);
+
+
+    @Select("select id  from team where (team_cur_capacity+0)<(team_capacity+0) and team.is_delete!=1 limit 1")
+    Integer selectRandom();
+
+
 }

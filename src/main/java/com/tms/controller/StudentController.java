@@ -17,6 +17,8 @@ import com.tms.utils.ThreadLocalUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,16 +68,64 @@ public class StudentController {
 
 
 
+    //修改学生信息，账号不能更，前端尽量传进来的时候所有字段都不为空
+    @PostMapping("/update")
+    public Result<String> update(@RequestBody StudentPageDto requestDto){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("account",requestDto.getAccount());
+        User u=userMapper.selectOne(wrapper);
+        if(null!=requestDto.getGender()){
+            u.setGender(requestDto.getGender());
+        }
+        if(null!=requestDto.getPhone()){
+            u.setPhone(requestDto.getPhone());
+        }
+        if(null!=requestDto.getUsername()){
+            u.setUsername(requestDto.getUsername());
+        }
+        userMapper.update(u,wrapper);
+        return Result.success("success");
+
+    }
+
+
+    //获取当前学生的个人信息
+    @PostMapping("/getUser")
+    public Result<StudentInfoResponseDto> getUser(){
+        User u=ThreadLocalUtil.getCurrentUser();
+        StudentInfoResponseDto studentInfoResponseDto=new StudentInfoResponseDto(u);
+        return Result.success(studentInfoResponseDto);
+    }
+
+
+    //学生设置个人资料
+    @PostMapping("/UpdateCurUser")
+    public Result<String> UpdateCurUser(StudentInfoResponseDto responseDto){
+        User u=ThreadLocalUtil.getCurrentUser();
+        QueryWrapper<User> wrapper=new QueryWrapper();
+        wrapper.eq("account",u.getAccount());
+        u.setPhone(responseDto.getPhone());
+        u.setGender(responseDto.getGender());
+        u.setPassword(responseDto.getPassword());
+        u.setQuestion1(responseDto.getQuestion1());
+        u.setQuestion2(responseDto.getQuestion2());
+        u.setAnswer1(responseDto.getAnswer1());
+        u.setAnswer2(responseDto.getAnswer2());
+        return Result.success("success");
+    }
+
+
+
     @PostMapping("/delete")
     public Result<String> delete(@RequestBody StudentDelRequestDto requestDto){
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("account",requestDto.getAccount());
         userMapper.delete(wrapper);
         System.out.println(requestDto.getAccount());
-        System.out.println("我到删除学生这了");
         return Result.success("success");
 
     }
+
 
     //选题，选题的时候创建小组，同时开启学生选题阶段
     @PostMapping("/select")
@@ -108,7 +158,36 @@ public class StudentController {
     }
 
 
-    //加入小组
+    //随机加入小组
+    @PostMapping("/randomjoin")
+    public Result<String> randomjoin(){
+        User u=ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+        int teamid=teamMapper.selectRandom();
+        QueryWrapper<TeamUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id",userid);
+        TeamUser t=teamUserMapper.selectOne(wrapper);
+        if(null==t){
+            t=new TeamUser();
+            t.setTeamId(teamid);
+            t.setUserId(userid);
+            teamUserMapper.insert(t);
+            //当前选题人数加一
+            TeamPageDto tm=teamMapper.selectTeam(teamid);
+            QueryWrapper<Team> wrapper1 = new QueryWrapper<>();
+            wrapper.eq("team_name",tm.getTeamName());
+            Team t1=teamMapper.selectOne(wrapper1);
+            if(t1.getTeamCurCapacity().compareTo(t1.getTeamCapacity())<1){
+                t1.setTeamCurCapacity(t1.getTeamCurCapacity()+1);
+            }
+            teamMapper.update(t1,wrapper1);
+            return Result.success("success");
+        }
+
+        return Result.error(CodeMsg.REPEAT_TEAMINSERT);
+
+    }
+
     @PostMapping("/join")
     public Result<String> join(@RequestBody TeamJoinRequestDto requestDto){
         User u=ThreadLocalUtil.getCurrentUser();
@@ -122,6 +201,15 @@ public class StudentController {
             t.setTeamId(teamid);
             t.setUserId(userid);
             teamUserMapper.insert(t);
+            //当前选题人数加一
+            TeamPageDto tm=teamMapper.selectTeam(teamid);
+            QueryWrapper<Team> wrapper1 = new QueryWrapper<>();
+            wrapper.eq("team_name",tm.getTeamName());
+            Team t1=teamMapper.selectOne(wrapper1);
+            if(t1.getTeamCurCapacity().compareTo(t1.getTeamCapacity())<1){
+                t1.setTeamCurCapacity(t1.getTeamCurCapacity()+1);
+            }
+            teamMapper.update(t1,wrapper1);
             return Result.success("success");
         }
 
@@ -163,6 +251,62 @@ public class StudentController {
         return Result.error(CodeMsg.REPEAT_TEAMINSERT);
 
     }
+
+    @PostMapping("/isLeader")
+    public Result<Boolean> isLeader(){
+        User u=ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+        QueryWrapper<Team> wrapper=new QueryWrapper();
+        wrapper.eq("team_leader_id",userid);
+        Team t=teamMapper.selectOne(wrapper);
+        if(null!=t){
+            return Result.success(true);
+        }
+
+        return Result.success(false);
+
+    }
+
+
+    //返回自己小组的信息，用户第一个是组长信息
+    @PostMapping("/getTeam")
+    public Result<TeamPageResponseDTO> getTeam() throws IOException, ClassNotFoundException {
+        User u=ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+
+        QueryWrapper<TeamUser> wrapper=new QueryWrapper<>();
+        wrapper.eq("team_id",userid);
+        TeamUser t=teamUserMapper.selectOne(wrapper);
+
+        if(null!=t){
+            int teamid=t.getTeamId();
+            TeamPageDto tp=teamMapper.selectTeam(teamid);
+            QueryWrapper<Team> wrapper1=new QueryWrapper<>();
+            wrapper1.eq("team_name",tp.getTeamName());
+            Team team=teamMapper.selectOne(wrapper1);
+            int leaderid=team.getTeamLeaderId();
+            QueryWrapper<TeamUser> tm=new QueryWrapper<>();
+            tm.eq("team_id",teamid);
+            List<TeamUser> tList=teamUserMapper.selectList(tm);
+            List<StudentPageDto> slist=new ArrayList<>();
+            StudentPageDto sp1= userMapper.select(leaderid);
+            slist.add(sp1);
+            for(TeamUser s:tList){
+                StudentPageDto sp= userMapper.select(s.getUserId());
+                slist.add(sp);
+            }
+
+            TeamPageResponseDTO res=new TeamPageResponseDTO(tp,slist);
+            return Result.success(res);
+        }
+        return Result.error(CodeMsg.REPEAT_TEAMINSERT);
+
+    }
+
+
+
+
+
 
 
 

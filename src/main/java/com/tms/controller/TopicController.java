@@ -9,7 +9,10 @@ import com.tms.entity.Topic;
 import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
 import com.tms.mapper.TopicMapper;
+import com.tms.mapper.UserMapper;
 import com.tms.service.ITopicService;
+import com.tms.utils.ThreadLocalUtil;
+import io.swagger.annotations.ApiModel;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +39,9 @@ public class TopicController {
 
     @Resource
     ITopicService topicService;
+
+    @Resource
+    UserMapper userMapper;
 
     //查看所有选题
     @PassToken
@@ -85,7 +91,7 @@ public class TopicController {
         return Result.error(CodeMsg.TOPIC_NOT_EXITS);
 
     }
-    //更新选题内容，更改的请求所有字段不能为空
+    //老师审核选题
     @PassToken
     @PostMapping("/approval")
     public Result<String> update(@RequestBody TopicIsCheckRequestDto requestDto){
@@ -102,6 +108,33 @@ public class TopicController {
         return Result.error(CodeMsg.TOPIC_NOT_EXITS);
 
     }
+
+    //学生自定义选题
+    @PassToken
+
+    @PostMapping("/subone")
+    public Result<String> subone(@RequestBody TopicInsertRequestDto requestDto){
+        User u= ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+
+        Topic t=new Topic();
+        t.setTopicName(requestDto.getTopicName());
+        t.setTopicDesc(requestDto.getTopicDesc());
+        t.setTopicCapacity(requestDto.getTopicCapacity());
+        t.setCreateUserId(userid);
+        t.setTopicSelectedNum(0);
+        t.setIsCheck("0");
+        t.setTopicMaxNum(1);
+        t.setIsTop("0");
+        topicMapper.insert(t);
+        return Result.success("success");
+
+
+    }
+
+
+
+
 
 
 
