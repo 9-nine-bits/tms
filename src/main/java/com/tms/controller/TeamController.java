@@ -8,6 +8,7 @@ import com.tms.dto.*;
 import com.tms.entity.Team;
 import com.tms.entity.TeamUser;
 import com.tms.entity.User;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.TeamMapper;
 import com.tms.mapper.TeamUserMapper;
 import com.tms.mapper.UserMapper;
@@ -44,6 +45,7 @@ public class TeamController {
 
 
     //查看小组情况
+    @UserLoginToken
     @PostMapping("/all")
     public Result<List<TeamPageResponseDTO>> getAllTeam(@RequestBody PageRequestDto pageRequestDto) throws IOException, ClassNotFoundException {
         // QueryWrapper<User> queryWrapper=new QueryWrapper<>();
@@ -61,8 +63,16 @@ public class TeamController {
             tm.eq("team_id",teamid);
             List<TeamUser> tList=teamUserMapper.selectList(tm);
             List<StudentPageDto> slist=new ArrayList<>();
+            TeamPageDto tp=teamMapper.selectTeam(teamid);
+            QueryWrapper<Team> wrapper1=new QueryWrapper<>();
+            wrapper1.eq("team_name",tp.getTeamName());
+            Team team=teamMapper.selectOne(wrapper1);
+            int leaderid=team.getTeamLeaderId();
+            StudentPageDto sp1= userMapper.select(leaderid);
+            slist.add(sp1);
             for(TeamUser s:tList){
                 StudentPageDto sp= userMapper.select(s.getUserId());
+
                 slist.add(sp);
             }
             TeamPageResponseDTO te=new TeamPageResponseDTO(t,slist);

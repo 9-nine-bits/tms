@@ -40,6 +40,6 @@ public class CodeMsg {
     public static final CodeMsg REPEAT_INSERT = new CodeMsg(500215, "不可重复插入");
     public static final CodeMsg REPEAT_TEAMINSERT = new CodeMsg(500215, "已经在小组里面了");
     public static final CodeMsg NOT_JOIN_GROUP = new CodeMsg(500216, "未加入小组");
-
-    public static final CodeMsg UESR_NOT_IN = new CodeMsg(500217, "不在小组里面");
+    public static final CodeMsg STATUS_NOT_IN = new CodeMsg(500217, "不在时间阶段里面");
+    public static final CodeMsg UESR_NOT_IN = new CodeMsg(500218, "不在小组里面");
 }

@@ -10,6 +10,7 @@ public class GloablExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Object handleException(Exception e) {
         String msg = e.getMessage();
+        e.printStackTrace();
         if (msg == null || msg.equals("")) {
             msg = "服务器出错";
         }

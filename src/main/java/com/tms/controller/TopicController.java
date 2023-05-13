@@ -8,6 +8,7 @@ import com.tms.dto.*;
 import com.tms.entity.Topic;
 import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.TopicMapper;
 import com.tms.mapper.UserMapper;
 import com.tms.service.ITopicService;
@@ -44,7 +45,7 @@ public class TopicController {
     UserMapper userMapper;
 
     //查看所有选题
-    @PassToken
+    @UserLoginToken
     @PostMapping("/all")
     public Result<List<TopicAllResponseDto>> allTopic(@RequestBody PageRequestDto pageRequestDto){
         Page<Topic> page=new Page<>(pageRequestDto.getPageNum(),pageRequestDto.getPageSize(),false);
@@ -54,7 +55,7 @@ public class TopicController {
     }
 
     //删除选题，但是要先检测该选题是否有小组选中
-    @PassToken
+    @UserLoginToken
     @PostMapping("/delete")
     public Result<String> delete (@RequestBody TopicDelRequestDto requestDto){
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
@@ -69,7 +70,7 @@ public class TopicController {
     }
 
     //更新选题内容，更改的请求所有字段不能为空
-    @PassToken
+    @UserLoginToken
     @PostMapping("/update")
     public Result<String> update(@RequestBody TopicUpdateRequestDto requestDto){
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
@@ -92,7 +93,7 @@ public class TopicController {
 
     }
     //老师审核选题
-    @PassToken
+    @UserLoginToken
     @PostMapping("/approval")
     public Result<String> update(@RequestBody TopicIsCheckRequestDto requestDto){
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
@@ -110,7 +111,7 @@ public class TopicController {
     }
 
     //学生自定义选题
-    @PassToken
+    @UserLoginToken
 
     @PostMapping("/subone")
     public Result<String> subone(@RequestBody TopicInsertRequestDto requestDto){

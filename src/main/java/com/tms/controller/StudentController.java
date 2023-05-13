@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tms.dto.*;
 import com.tms.entity.*;
 
+import com.tms.inter_face.PassToken;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.*;
 import com.tms.service.IRoleService;
 import com.tms.service.IUserService;
@@ -53,6 +55,7 @@ public class StudentController {
 
 
 
+    @UserLoginToken
     @PostMapping("/all")
     public Result<List<StudentPageDto>> getAllStudent(@RequestBody PageRequestDto pageRequestDto){
        // QueryWrapper<User> queryWrapper=new QueryWrapper<>();
@@ -69,6 +72,7 @@ public class StudentController {
 
 
     //修改学生信息，账号不能更，前端尽量传进来的时候所有字段都不为空
+    @UserLoginToken
     @PostMapping("/update")
     public Result<String> update(@RequestBody StudentPageDto requestDto){
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -90,15 +94,19 @@ public class StudentController {
 
 
     //获取当前学生的个人信息
+
+    @UserLoginToken
     @PostMapping("/getUser")
     public Result<StudentInfoResponseDto> getUser(){
         User u=ThreadLocalUtil.getCurrentUser();
+        System.out.println(u);
         StudentInfoResponseDto studentInfoResponseDto=new StudentInfoResponseDto(u);
         return Result.success(studentInfoResponseDto);
     }
 
 
     //学生设置个人资料
+    @UserLoginToken
     @PostMapping("/UpdateCurUser")
     public Result<String> UpdateCurUser(StudentInfoResponseDto responseDto){
         User u=ThreadLocalUtil.getCurrentUser();
@@ -116,6 +124,7 @@ public class StudentController {
 
 
 
+    @UserLoginToken
     @PostMapping("/delete")
     public Result<String> delete(@RequestBody StudentDelRequestDto requestDto){
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -128,6 +137,7 @@ public class StudentController {
 
 
     //选题，选题的时候创建小组，同时开启学生选题阶段
+    @UserLoginToken
     @PostMapping("/select")
     public Result<String> select(@RequestBody TeamCreateRequestDto requestDto){
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
@@ -159,6 +169,7 @@ public class StudentController {
 
 
     //随机加入小组
+    @UserLoginToken
     @PostMapping("/randomjoin")
     public Result<String> randomjoin(){
         User u=ThreadLocalUtil.getCurrentUser();
@@ -188,6 +199,7 @@ public class StudentController {
 
     }
 
+    @UserLoginToken
     @PostMapping("/join")
     public Result<String> join(@RequestBody TeamJoinRequestDto requestDto){
         User u=ThreadLocalUtil.getCurrentUser();
@@ -218,6 +230,7 @@ public class StudentController {
     }
 
     //退出小组
+    @UserLoginToken
     @PostMapping("/quit")
     public Result<String> quit(@RequestBody TeamJoinRequestDto requestDto){
         User u=ThreadLocalUtil.getCurrentUser();
@@ -236,6 +249,7 @@ public class StudentController {
     }
 
     //组长踢出小组人员(前端需设置组长只能踢本组的，即只有本组的成员后面有踢出按钮（后端暂时未做校验）)
+    @UserLoginToken
     @PostMapping("/kick")
     public Result<String> kick(@RequestBody StudentDelRequestDto requestDto){
 
@@ -252,6 +266,7 @@ public class StudentController {
 
     }
 
+    @UserLoginToken
     @PostMapping("/isLeader")
     public Result<Boolean> isLeader(){
         User u=ThreadLocalUtil.getCurrentUser();
@@ -269,6 +284,7 @@ public class StudentController {
 
 
     //返回自己小组的信息，用户第一个是组长信息
+    @UserLoginToken
     @PostMapping("/getTeam")
     public Result<TeamPageResponseDTO> getTeam() throws IOException, ClassNotFoundException {
         User u=ThreadLocalUtil.getCurrentUser();

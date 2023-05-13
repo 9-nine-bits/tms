@@ -3,6 +3,7 @@ package com.tms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tms.entity.Role;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.service.IRoleService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import javax.annotation.Resource;
 public class RoleController {
     @Resource
     IRoleService roleService;
+    @UserLoginToken
     @RequestMapping
     public Role getRole(@PathVariable("id") int id){
         QueryWrapper<Role> wrapper = new QueryWrapper<>();

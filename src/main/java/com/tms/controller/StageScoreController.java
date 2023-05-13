@@ -9,6 +9,7 @@ import com.tms.dto.StudentLeaderChooseRequestDto;
 import com.tms.entity.LessonStatus;
 import com.tms.entity.StageScore;
 import com.tms.inter_face.PassToken;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.LessonStatusMapper;
 import com.tms.mapper.StageScoreMapper;
 import com.tms.mapper.UserMapper;
@@ -45,7 +46,7 @@ public class StageScoreController {
     LessonStatusMapper lessonStatusMapper;
 
     //阶段性打分
-    @PassToken
+    @UserLoginToken
     @PostMapping("/insert")
     public Result<String> insert(@RequestBody StageScoreInsertRequestDto request){
         StageScore s=new StageScore();

@@ -10,6 +10,7 @@ import com.tms.entity.RoleUser;
 import com.tms.entity.Score;
 import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.ScoreMapper;
 import com.tms.mapper.TeamMapper;
 import com.tms.mapper.UserMapper;
@@ -43,7 +44,7 @@ public class ScoreController {
     ScoreMapper scoreMapper;
 
     //老师给小组评分
-    @PassToken
+    @UserLoginToken
     @PostMapping("/set")
     public Result<String> setLeader(@RequestBody ScoreSetRequestDto request){
         QueryWrapper<Score> wrapper = new QueryWrapper<>();

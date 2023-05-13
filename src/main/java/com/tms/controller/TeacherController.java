@@ -5,6 +5,7 @@ import com.tms.dto.*;
 import com.tms.entity.RoleUser;
 import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.RoleUserMapper;
 import com.tms.mapper.UserMapper;
 import com.tms.service.IRoleService;
@@ -30,7 +31,7 @@ public class TeacherController {
     @Resource
     RoleUserMapper roleUserMapper;
     //暂时弃用
-    @PassToken
+    @UserLoginToken
     @PostMapping("/setLeader")
     public Result<String> setLeader(@RequestBody StudentLeaderChooseRequestDto request){
         QueryWrapper<User> wrapper = new QueryWrapper<>();

@@ -16,7 +16,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
         //addPathPatterns为拦截此请求路径的请求
         //excludePathPatterns为不拦截此路径的请求
 
-        registry.addInterceptor(requestInterceptor).addPathPatterns("/user/*").excludePathPatterns("/user/login")
+        registry.addInterceptor(requestInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login")
                 .excludePathPatterns("/story/signOrRegister");
     }
     @Override

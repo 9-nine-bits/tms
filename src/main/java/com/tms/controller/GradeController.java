@@ -9,6 +9,7 @@ import com.tms.entity.Grade;
 import com.tms.entity.RoleUser;
 import com.tms.entity.User;
 import com.tms.inter_face.PassToken;
+import com.tms.inter_face.UserLoginToken;
 import com.tms.mapper.GradeMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +34,7 @@ public class GradeController {
 
     @Resource
     GradeMapper gradeMapper;
-    @PassToken
+    @UserLoginToken
     @PostMapping("/all")
     public Result<List<GradeResponseDto>> allGrade(@RequestBody PageRequestDto requestDto){
         Page<Grade> page=new Page<>(requestDto.getPageNum(),requestDto.getPageSize(),false);
@@ -41,7 +42,7 @@ public class GradeController {
         return Result.success(iPage.getRecords(),iPage.getTotal());
     }
     //计算总分数
-    @PassToken
+    @UserLoginToken
     @PostMapping("/cal")
     public Result<String> cal(){
         QueryWrapper<User> wrapper = new QueryWrapper<>();
