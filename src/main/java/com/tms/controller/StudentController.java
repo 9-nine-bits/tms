@@ -70,6 +70,27 @@ public class StudentController {
     }
 
 
+    @UserLoginToken
+    @PostMapping("/addonestudent")
+    public Result<String> addonestudent(@RequestBody StudentInsertRequestDto requestDto){
+
+        User u=new User();
+        u.setAccount(requestDto.getAccount());
+        u.setUsername(requestDto.getUsername());
+        u.setPhone("10086");
+        u.setPassword("123");
+        u.setGender("male");
+        u.setQuestion1("1+1");
+        u.setQuestion2("1+2");
+        u.setAnswer2("3");
+        u.setAnswer1("2");
+        userMapper.insert(u);
+        return Result.success("success");
+
+    }
+
+
+
 
     //修改学生信息，账号不能更，前端尽量传进来的时候所有字段都不为空
     @UserLoginToken
@@ -110,7 +131,7 @@ public class StudentController {
     @PostMapping("/UpdateCurUser")
     public Result<String> UpdateCurUser(StudentInfoResponseDto responseDto){
         User u=ThreadLocalUtil.getCurrentUser();
-        QueryWrapper<User> wrapper=new QueryWrapper();
+        QueryWrapper<User> wrapper=new QueryWrapper<>();
         wrapper.eq("account",u.getAccount());
         u.setPhone(responseDto.getPhone());
         u.setGender(responseDto.getGender());
@@ -119,6 +140,7 @@ public class StudentController {
         u.setQuestion2(responseDto.getQuestion2());
         u.setAnswer1(responseDto.getAnswer1());
         u.setAnswer2(responseDto.getAnswer2());
+        userMapper.update(u,wrapper);
         return Result.success("success");
     }
 
