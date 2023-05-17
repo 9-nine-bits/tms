@@ -290,6 +290,33 @@ public class StudentController {
         User u=ThreadLocalUtil.getCurrentUser();
         int userid=userMapper.getId(u.getAccount());
 
+        QueryWrapper<Team> wrapper2=new QueryWrapper();
+        wrapper2.eq("team_leader_id",userid);
+        Team t1=teamMapper.selectOne(wrapper2);
+        if(null!=t1){
+            int teamid=teamMapper.getId(t1.getTeamName());
+            QueryWrapper<TeamUser> tm=new QueryWrapper<>();
+            tm.eq("team_id",teamid);
+
+            TeamPageDto tp=teamMapper.selectTeam(teamid);
+
+
+            List<TeamUser> tList=teamUserMapper.selectList(tm);
+            List<StudentPageDto> slist=new ArrayList<>();
+            StudentPageDto sp1= userMapper.select(userid);
+            slist.add(sp1);
+            for(TeamUser s:tList){
+                StudentPageDto sp= userMapper.select(s.getUserId());
+                slist.add(sp);
+            }
+            TeamPageResponseDTO res=new TeamPageResponseDTO(tp,slist);
+            return Result.success(res);
+
+
+        }
+
+
+
         QueryWrapper<TeamUser> wrapper=new QueryWrapper<>();
         wrapper.eq("user_id",userid);
         TeamUser t=teamUserMapper.selectOne(wrapper);
