@@ -291,7 +291,7 @@ public class StudentController {
         int userid=userMapper.getId(u.getAccount());
 
         QueryWrapper<TeamUser> wrapper=new QueryWrapper<>();
-        wrapper.eq("team_id",userid);
+        wrapper.eq("user_id",userid);
         TeamUser t=teamUserMapper.selectOne(wrapper);
 
         if(null!=t){
@@ -315,7 +315,7 @@ public class StudentController {
             TeamPageResponseDTO res=new TeamPageResponseDTO(tp,slist);
             return Result.success(res);
         }
-        return Result.error(CodeMsg.REPEAT_TEAMINSERT);
+        return Result.error(CodeMsg.UESR_NOT_IN);
 
     }
 

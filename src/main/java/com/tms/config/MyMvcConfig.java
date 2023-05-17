@@ -17,7 +17,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
         //excludePathPatterns为不拦截此路径的请求
 
         registry.addInterceptor(requestInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login")
-                .excludePathPatterns("/story/signOrRegister");
+                .excludePathPatterns("/swagger-ui.html");
     }
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

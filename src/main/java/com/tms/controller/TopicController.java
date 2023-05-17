@@ -95,7 +95,7 @@ public class TopicController {
     //老师审核选题
     @UserLoginToken
     @PostMapping("/approval")
-    public Result<String> update(@RequestBody TopicIsCheckRequestDto requestDto){
+    public Result<String> approval(@RequestBody TopicIsCheckRequestDto requestDto){
         QueryWrapper<Topic> wrapper = new QueryWrapper<>();
         wrapper.eq("topic_name",requestDto.getTopicName());
         Topic t=topicService.getOne(wrapper);
@@ -125,6 +125,29 @@ public class TopicController {
         t.setCreateUserId(userid);
         t.setTopicSelectedNum(0);
         t.setIsCheck("0");
+        t.setTopicMaxNum(1);
+        t.setIsTop("0");
+        topicMapper.insert(t);
+        return Result.success("success");
+
+
+    }
+
+
+    @UserLoginToken
+
+    @PostMapping("/teachersubone")
+    public Result<String> teachersubone(@RequestBody TopicInsertRequestDto requestDto){
+        User u= ThreadLocalUtil.getCurrentUser();
+        int userid=userMapper.getId(u.getAccount());
+
+        Topic t=new Topic();
+        t.setTopicName(requestDto.getTopicName());
+        t.setTopicDesc(requestDto.getTopicDesc());
+        t.setTopicCapacity(requestDto.getTopicCapacity());
+        t.setCreateUserId(userid);
+        t.setTopicSelectedNum(0);
+        t.setIsCheck("1");
         t.setTopicMaxNum(1);
         t.setIsTop("0");
         topicMapper.insert(t);
