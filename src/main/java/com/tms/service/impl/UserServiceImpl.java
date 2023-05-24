@@ -10,15 +10,9 @@ import com.tms.dto.StudentGradeDto;
 import com.tms.dto.StudentMessageDto;
 import com.tms.dto.StudentPageDto;
 import com.tms.dto.UserDto;
-import com.tms.entity.Grade;
-import com.tms.entity.RoleUser;
-import com.tms.entity.StageScore;
-import com.tms.entity.User;
+import com.tms.entity.*;
 import com.tms.listner.ExcelListener;
-import com.tms.mapper.GradeMapper;
-import com.tms.mapper.RoleUserMapper;
-import com.tms.mapper.StageScoreMapper;
-import com.tms.mapper.UserMapper;
+import com.tms.mapper.*;
 import com.tms.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +47,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Resource
     GradeMapper gradeMapper;
+    @Resource
+    TeamMapper teamMapper;
 
+    @Resource
+    TeamUserMapper teamUserMapper;
 
 
     @Resource
     RoleUserMapper roleUserMapper;
+
+
+
+
+    public int getTeamId(int userid){
+        QueryWrapper<Team> wrapper=new QueryWrapper<>();
+        QueryWrapper<TeamUser> wrapper1=new QueryWrapper<>();
+        wrapper.eq("team_leader_id",userid);
+        wrapper1.eq("user_id",userid);
+        Team t=teamMapper.selectOne(wrapper);
+        TeamUser tm=teamUserMapper.selectOne(wrapper1);
+        if(t!=null&&teamMapper.getId(t.getTeamName())!=null){
+            return teamMapper.getId(t.getTeamName());
+        }else if(tm!=null&&tm.getTeamId()!=null){
+            return tm.getTeamId();
+        }
+        return -1;
+    }
 
 
     public void excelExport(HttpServletResponse response) throws IOException {

@@ -393,18 +393,5 @@ public class StudentController {
 
 
 
-    @PassToken
-    @PostMapping("/exceltopic")
-    public String excelImportTopic(@RequestBody MultipartFile file) throws IOException {
-        userService.excelImport(file);
-        return "success";
-    }
-
-
-
-
-
-
-
 
 }

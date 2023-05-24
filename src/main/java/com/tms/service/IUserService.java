@@ -16,6 +16,7 @@ import java.io.IOException;
  * @since 2023-04-19
  */
 public interface IUserService extends IService<User> {
+    public int getTeamId(int userid);
     public void excelExport(HttpServletResponse response) throws IOException;
     public void excelImport(MultipartFile file) throws IOException;
 

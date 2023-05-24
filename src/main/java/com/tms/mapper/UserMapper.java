@@ -35,4 +35,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select user.id as id,account,username from  user  inner join role_user on user.id=role_user.user_id where role_user.role_id=1 and user.is_delete!=1")
     List<StudentMessageDto> selectAllStudent();
 
+
+
+
 }
