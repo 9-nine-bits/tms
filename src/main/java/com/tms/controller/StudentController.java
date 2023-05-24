@@ -96,6 +96,10 @@ public class StudentController {
         u.setAnswer2("3");
         u.setAnswer1("2");
         userMapper.insert(u);
+        RoleUser roleUser=new RoleUser();
+        roleUser.setRoleId(1);
+        roleUser.setUserId(userMapper.getId(requestDto.getAccount()));
+        roleUserMapper.insert(roleUser);
         return Result.success("success");
 
     }
@@ -322,7 +326,6 @@ public class StudentController {
     public Result<TeamPageResponseDTO> getTeam() throws IOException, ClassNotFoundException {
         User u=ThreadLocalUtil.getCurrentUser();
         int userid=userMapper.getId(u.getAccount());
-
         QueryWrapper<Team> wrapper2=new QueryWrapper();
         wrapper2.eq("team_leader_id",userid);
         Team t1=teamMapper.selectOne(wrapper2);
@@ -330,10 +333,7 @@ public class StudentController {
             int teamid=teamMapper.getId(t1.getTeamName());
             QueryWrapper<TeamUser> tm=new QueryWrapper<>();
             tm.eq("team_id",teamid);
-
             TeamPageDto tp=teamMapper.selectTeam(teamid);
-
-
             List<TeamUser> tList=teamUserMapper.selectList(tm);
             List<StudentPageDto> slist=new ArrayList<>();
             StudentPageDto sp1= userMapper.select(userid);
@@ -344,12 +344,7 @@ public class StudentController {
             }
             TeamPageResponseDTO res=new TeamPageResponseDTO(tp,slist);
             return Result.success(res);
-
-
         }
-
-
-
         QueryWrapper<TeamUser> wrapper=new QueryWrapper<>();
         wrapper.eq("user_id",userid);
         TeamUser t=teamUserMapper.selectOne(wrapper);

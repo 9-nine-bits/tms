@@ -54,7 +54,9 @@ public class TeamController {
         Page<Team> page=new Page<>(pageRequestDto.getPageNum(),pageRequestDto.getPageSize(),false);
         // User u=userService.getOne(userLambdaQueryWrapper);
         // System.out.println(u.getUsername()+u.getPassword());
-        IPage<TeamPageDto> iPage=teamMapper.selectByPage(page);
+        String tname=pageRequestDto.getTeamName()+"%";
+        String leader=pageRequestDto.getLeader()+"%";
+        IPage<TeamPageDto> iPage=teamMapper.selectByPage(page,tname,leader);
         List<TeamPageDto> list=iPage.getRecords();
         List<TeamPageResponseDTO> res=new ArrayList<>();
         for(TeamPageDto t:list){
@@ -82,5 +84,9 @@ public class TeamController {
         // System.out.println(iPage.getRecords().get(0));
         return Result.success(res, iPage.getTotal());
     }
+
+
+
+
 
 }
