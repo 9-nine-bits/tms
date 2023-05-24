@@ -46,7 +46,7 @@ public class GradeController {
     @PostMapping("/cal")
     public Result<String> cal(){
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-       return null;
+        return null;
 
     }
 

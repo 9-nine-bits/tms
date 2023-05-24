@@ -55,7 +55,17 @@ public class TeamController {
         // User u=userService.getOne(userLambdaQueryWrapper);
         // System.out.println(u.getUsername()+u.getPassword());
         String tname=pageRequestDto.getTeamName()+"%";
+       if(null==pageRequestDto.getTeamName()){
+           tname="%";
+       }
+        System.out.println(tname);
+
+
         String leader=pageRequestDto.getLeader()+"%";
+        if(null==pageRequestDto.getLeader()){
+            leader="%";
+        }
+        System.out.println(leader);
         IPage<TeamPageDto> iPage=teamMapper.selectByPage(page,tname,leader);
         List<TeamPageDto> list=iPage.getRecords();
         List<TeamPageResponseDTO> res=new ArrayList<>();

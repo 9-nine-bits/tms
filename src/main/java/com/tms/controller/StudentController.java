@@ -223,7 +223,7 @@ public class StudentController {
             //当前选题人数加一
             TeamPageDto tm=teamMapper.selectTeam(teamid);
             QueryWrapper<Team> wrapper1 = new QueryWrapper<>();
-            wrapper.eq("team_name",tm.getTeamName());
+            wrapper1.eq("team_name",tm.getTeamName());
             Team t1=teamMapper.selectOne(wrapper1);
             if(t1.getTeamCurCapacity().compareTo(t1.getTeamCapacity())<1){
                 t1.setTeamCurCapacity(t1.getTeamCurCapacity()+1);
@@ -253,7 +253,7 @@ public class StudentController {
             //当前选题人数加一
             TeamPageDto tm=teamMapper.selectTeam(teamid);
             QueryWrapper<Team> wrapper1 = new QueryWrapper<>();
-            wrapper.eq("team_name",tm.getTeamName());
+            wrapper1.eq("team_name",tm.getTeamName());
             Team t1=teamMapper.selectOne(wrapper1);
             if(t1.getTeamCurCapacity().compareTo(t1.getTeamCapacity())<1){
                 t1.setTeamCurCapacity(t1.getTeamCurCapacity()+1);
@@ -385,7 +385,7 @@ public class StudentController {
 
     //导入学生信息
     @PostMapping("/excelinsert")
-    public String excelImport(@RequestParam("file") MultipartFile file) throws IOException {
+    public String excelImport(@RequestBody MultipartFile file) throws IOException {
         userService.excelImport(file);
         return "success";
     }

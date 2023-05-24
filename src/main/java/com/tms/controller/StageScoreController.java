@@ -55,9 +55,12 @@ public class StageScoreController {
         QueryWrapper<StageScore> wrapper=new QueryWrapper();
         wrapper.eq("user_id",userid);
         wrapper.eq("lesson_status_id",lesstutasid);
+        System.out.println(userid);
+        System.out.println(lesstutasid);
+        System.out.println("//////");
         StageScore tmp=stageScoreService.getOne(wrapper);
+        //  System.out.println(tmp.getCurStatusScore());
         if(null!=tmp){
-
         return Result.error(CodeMsg.REPEAT_INSERT);
         }
         s.setUserId(userid);
