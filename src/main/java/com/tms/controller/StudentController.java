@@ -384,6 +384,7 @@ public class StudentController {
 
 
     //导入学生信息
+    @PassToken
     @PostMapping("/excelinsert")
     public String excelImport(@RequestBody MultipartFile file) throws IOException {
         userService.excelImport(file);
@@ -392,7 +393,12 @@ public class StudentController {
 
 
 
-
+    @PassToken
+    @PostMapping("/exceltopic")
+    public String excelImportTopic(@RequestBody MultipartFile file) throws IOException {
+        userService.excelImport(file);
+        return "success";
+    }
 
 
 

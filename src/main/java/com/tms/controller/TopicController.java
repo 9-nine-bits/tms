@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -154,6 +156,14 @@ public class TopicController {
         return Result.success("success");
 
 
+    }
+
+
+    @UserLoginToken
+    @PostMapping("/exceltopic")
+    public String excelImportTopic(@RequestBody MultipartFile file) throws IOException {
+        topicService.excelImport(file);
+        return "success";
     }
 
 
