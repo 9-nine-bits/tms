@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.tms.dto.StudentLeaderChooseRequestDto;
+import com.tms.dto.StudentMessageDto;
 import com.tms.dto.StudentPageDto;
 import com.tms.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -31,5 +32,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select account, username,phone,gender from  user  where user.id=#{id} and user.is_delete!=1")
     StudentPageDto select(int id);
 
+    @Select("select user.id as id,account,username from  user  inner join role_user on user.id=role_user.user_id where role_user.role_id=1 and user.is_delete!=1")
+    List<StudentMessageDto> selectAllStudent();
 
 }

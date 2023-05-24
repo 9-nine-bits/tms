@@ -1,4 +1,6 @@
 package com.tms.controller;
+import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.metadata.Sheet;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
@@ -12,14 +14,19 @@ import com.tms.entity.*;
 
 import com.tms.inter_face.PassToken;
 import com.tms.inter_face.UserLoginToken;
+import com.tms.listner.ExcelListener;
 import com.tms.mapper.*;
 import com.tms.service.IRoleService;
 import com.tms.service.IUserService;
 import com.tms.utils.ThreadLocalUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +62,10 @@ public class StudentController {
 
 
 
+    @Resource
+    RoleUserMapper roleUserMapper;
+
+
     @UserLoginToken
     @PostMapping("/all")
     public Result<List<StudentPageDto>> getAllStudent(@RequestBody PageRequestDto pageRequestDto){
@@ -70,7 +81,7 @@ public class StudentController {
     }
 
 
-    @UserLoginToken
+    @PassToken
     @PostMapping("/addonestudent")
     public Result<String> addonestudent(@RequestBody StudentInsertRequestDto requestDto){
 
@@ -367,6 +378,25 @@ public class StudentController {
         return Result.error(CodeMsg.UESR_NOT_IN);
 
     }
+
+
+    //导出学生成绩
+    @PassToken
+    @GetMapping("/excel")
+    public void excelExport(HttpServletResponse response) throws IOException {
+        userService.excelExport(response);
+    }
+
+
+    //导入学生信息
+    @PostMapping("/excelinsert")
+    public String excelImport(@RequestParam("file") MultipartFile file) throws IOException {
+        userService.excelImport(file);
+        return "success";
+    }
+
+
+
 
 
 

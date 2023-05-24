@@ -6,13 +6,13 @@ spring:
     name: comment
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://117.50.181.73:3308/tms?useUnicode=true&useSSL=false&characterEncoding=utf8
-    username: remote
-    password: dlut
+    url: jdbc:mysql://localhost:3306/tms?useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: root
+    password: wuchuang
 
   redis:
-    host: 47.109.17.8
-    port: 6378
+    host: 127.0.0.1
+    port: 6379
     timeout: 0
 
   jackson:

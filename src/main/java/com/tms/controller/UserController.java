@@ -100,6 +100,7 @@ public class UserController {
             if("2".equals(redisTemplate.opsForValue().get(request.getAccount()))){
                 QueryWrapper<User> wrapper = new QueryWrapper<>();
                 wrapper.eq("account",request.getAccount());
+                System.out.println(request.getPassword());
                 User u=userService.getOne(wrapper);
                 u.setPassword(request.getPassword());
                 userService.update(u,wrapper);
